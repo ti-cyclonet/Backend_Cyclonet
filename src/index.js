@@ -1,0 +1,17 @@
+import colors from "colors";
+import express from "express";
+import { PORT } from "./config.js";
+import userRoutes from "./routes/users.routes.js";
+import rolesRoutes from "./routes/roles.routes.js";
+import morgan from "morgan";
+
+const app = express();
+
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(userRoutes);
+app.use(rolesRoutes);
+
+app.listen(PORT);
+
+console.log("CycloNet Server".bgCyan, "listening on port", PORT);
