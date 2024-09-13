@@ -3,7 +3,7 @@ CREATE SCHEMA sc_Authorization;
 -- --  Crear la tabla tblRoles en el esquema sc_Authorization
 CREATE TABLE sc_Authorization."tblRoles" (
     id serial NOT NULL,
-    strName VARCHAR (50) NOT NULL,
+    strName VARCHAR (50) NOT NULL UNIQUE,
     strDescription1 VARCHAR (50) NOT NULL,
     strDescription2 VARCHAR (200),
     ingIdApplication INTEGER NOT NULL,
