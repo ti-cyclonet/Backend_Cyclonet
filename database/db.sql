@@ -6,6 +6,7 @@ CREATE TABLE sc_Authorization."tblRoles" (
     strName VARCHAR (50) NOT NULL,
     strDescription1 VARCHAR (50) NOT NULL,
     strDescription2 VARCHAR (200),
+    ingIdApplication INTEGER NOT NULL,
     CONSTRAINT pk_id_rol PRIMARY KEY (id)
 );
 -- Crear la tabla tblUsers en el esquema sc_Authorization
@@ -38,37 +39,43 @@ CREATE TABLE sc_authorization."tblUsersByRol"
         NOT VALID
 );
 -- -- Insertar roles
-INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2)
+INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2, ingIdApplication)
 VALUES 
+    (
+        'adminAuthoriza',
+        'Administrator',
+        'Acceso a todas las opciones de la aplicación',
+        1
+    ),
     (
         'adminShotra',
         'Administrator',
-        'Acceso a todas las opciones de la aplicación'
+        'Acceso a todas las opciones de la aplicación',
+        2
     ),
     (
         'adminInout',
         'Administrator',
-        'Acceso a todas las opciones de la aplicación'
+        'Acceso a todas las opciones de la aplicación',
+        3
     ),
     (
         'adminMagenta',
         'Administrator',
-        'Acceso a todas las opciones de la aplicación'
-    ),
-    (
-        'adminAuthoriza',
-        'Administrator',
-        'Acceso a todas las opciones de la aplicación'
+        'Acceso a todas las opciones de la aplicación',
+        4
     ),
     (
         'adminF_a',
         'Administrator',
-        'Acceso a todas las opciones de la aplicación'
+        'Acceso a todas las opciones de la aplicación',
+        5
     ),
     (
         'userShotra',
         'Usuario',
-        'Acceso sólo a las funciones principales'
+        'Acceso sólo a las funciones principales',
+        2
     );
 
 -- Insertar un usuario básico
