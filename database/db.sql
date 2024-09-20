@@ -1,5 +1,9 @@
 -- -- Crear el esquema sc_Authorization
 CREATE SCHEMA sc_Authorization;
+
+-- -- Crear el esquema sc_Authorization
+CREATE SCHEMA sc_Magenta;
+
 -- --  Crear la tabla tblRoles en el esquema sc_Authorization
 CREATE TABLE sc_Authorization."tblRoles" (
     id serial NOT NULL,
