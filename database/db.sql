@@ -38,6 +38,14 @@ CREATE TABLE sc_authorization."tblUsersByRol"
         ON DELETE NO ACTION
         NOT VALID
 );
+-- Crear tabla Aplicacionbes
+CREATE TABLE sc_authorization."tblApplications"
+(
+    id serial NOT NULL,
+    "strName" character varying(100) NOT NULL UNIQUE,
+    "strDescription" character varying(200),
+    CONSTRAINT pk_id_application PRIMARY KEY (id)
+);
 -- -- Insertar roles
 INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2, ingIdApplication)
 VALUES 
