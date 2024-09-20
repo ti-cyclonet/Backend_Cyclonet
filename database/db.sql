@@ -1,9 +1,9 @@
 -- -- Crear el esquema sc_Authorization
 CREATE SCHEMA sc_Authorization;
-
 -- -- Crear el esquema sc_Authorization
 CREATE SCHEMA sc_Magenta;
-
+-- -- Crear el esquema sc_Shotra
+CREATE SCHEMA sc_Shotra;
 -- --  Crear la tabla tblRoles en el esquema sc_Authorization
 CREATE TABLE sc_Authorization."tblRoles" (
     id serial NOT NULL,
@@ -41,6 +41,14 @@ CREATE TABLE sc_authorization."tblUsersByRol"
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
+);
+-- Crear tabla Aplicacionbes
+CREATE TABLE sc_authorization."tblApplications"
+(
+    id serial NOT NULL,
+    "strName" character varying(100) NOT NULL UNIQUE,
+    "strDescription" character varying(200),
+    CONSTRAINT pk_id_application PRIMARY KEY (id)
 );
 -- -- Insertar roles
 INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2, ingIdApplication)
