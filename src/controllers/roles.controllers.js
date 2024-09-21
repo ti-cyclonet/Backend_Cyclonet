@@ -18,6 +18,30 @@ export const getRolById = async (req, res) => {
   res.json(rows);
 };
 
+export const deleteRol = async (req, res) => {
+  const { id } = req.params;
+  const { rowCount } = await pool.query(
+    `DELETE FROM sc_authorization."tblRoles"	WHERE id = ${id} RETURNING *`
+  );
+  if (rowCount === 0) {
+    return res.status(404).json({ message: "Rol not found." });
+  }
+  return res.sendStatus(204);
+};
+
+export const updateRol = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const { rows, rowCount } = await pool.query(
+    'UPDATE sc_authorization."tblRoles" SET strName = $1, strDescription1 = $2, strDescription2 = $3 WHERE id = $4 RETURNING *',
+    [data.strName, data.strDescription1, data.strDescription2, id]
+  );
+  if (rowCount === 0) {
+    return res.status(404).json({ message: "Rol not found." });
+  }
+  res.json(rows[0]);
+};
+
 export const createRol = async (req, res) => {
   try {
     const data = req.body;
@@ -46,26 +70,4 @@ export const createRol = async (req, res) => {
       detail: error.detail,
     });
   }
-};
-export const deleteRol = async (req, res) => {
-  const { id } = req.params;
-  const { rowCount } = await pool.query(
-    `DELETE FROM sc_authorization."tblRoles"	WHERE id = ${id} RETURNING *`
-  );
-  if (rowCount === 0) {
-    return res.status(404).json({ message: "Rol not found." });
-  }
-  return res.sendStatus(204);
-};
-export const updateRol = async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
-  const { rows, rowCount } = await pool.query(
-    'UPDATE sc_authorization."tblRoles" SET strName = $1, strDescription1 = $2, strDescription2 = $3 WHERE id = $4 RETURNING *',
-    [data.strName, data.strDescription1, data.strDescription2, id]
-  );
-  if (rowCount === 0) {
-    return res.status(404).json({ message: "Rol not found." });
-  }
-  res.json(rows[0]);
 };
