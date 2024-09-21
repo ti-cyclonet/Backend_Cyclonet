@@ -14,10 +14,10 @@ router.get("/roles", getRoles);
 
 router.get("/rol/:id", getRolById);
 
-router.post("/rol", createRol);
-
 router.delete("/rol/:id", deleteRol);
 
 router.put("/rol/:id", updateRol);
+
+router.post("/rol", createRol);
 
 export default router;
