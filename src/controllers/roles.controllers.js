@@ -1,12 +1,14 @@
 import { pool } from "../db.js";
 
+// Obtiene todos los roles
 export const getRoles = async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT * FROM sc_Authorization."tblRoles"'
+    'SELECT * FROM sc_Authorization."tblRoles" ORDER BY ID ASC'
   );
   res.json(rows);
 };
 
+// Obtiene un rol dado su ID
 export const getRolById = async (req, res) => {
   const { id } = req.params;
   const { rows } = await pool.query(
@@ -18,6 +20,7 @@ export const getRolById = async (req, res) => {
   res.json(rows);
 };
 
+// Elimina un rol dado su ID
 export const deleteRol = async (req, res) => {
   const { id } = req.params;
   const { rowCount } = await pool.query(
@@ -29,6 +32,7 @@ export const deleteRol = async (req, res) => {
   return res.sendStatus(204);
 };
 
+// Actualiza un rol dado su ID
 export const updateRol = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
@@ -42,6 +46,7 @@ export const updateRol = async (req, res) => {
   res.json(rows[0]);
 };
 
+// Crea un nuevo rol
 export const createRol = async (req, res) => {
   try {
     const data = req.body;
