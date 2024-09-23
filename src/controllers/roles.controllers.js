@@ -38,7 +38,7 @@ export const updateRol = async (req, res) => {
   const data = req.body;
   const { rows, rowCount } = await pool.query(
     'UPDATE sc_authorization."tblRoles" SET strName = $1, strDescription1 = $2, strDescription2 = $3 WHERE id = $4 RETURNING *',
-    [data.strName, data.strDescription1, data.strDescription2, id]
+    [data.strname, data.strdescription1, data.strdescription2, id]
   );
   if (rowCount === 0) {
     return res.status(404).json({ message: "Rol not found." });
