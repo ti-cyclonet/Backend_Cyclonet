@@ -15,10 +15,10 @@ const router = Router();
 router.get("/usersbyrol", getUsersByRol);
 
 // Obtiene las relaciones de usuario por rol dado el ID del usuario
-router.get("/usersbyrol/:id", getUsersByRolByIdUser);
+router.get("/usersbyrolbyiduser/:id", getUsersByRolByIdUser);
 
 // Obtiene las relaciones de usuario por rol dado el ID del rol
-router.get("/usersbyrol/:id", getUsersByRolByIdRol);
+router.get("/usersbyrolbyidrol/:id", getUsersByRolByIdRol);
 
 // Elimina una relación de usuario por rol dado el ID de la relación
 router.delete("/usersbyrol/:id", deleteUsersByRol);
