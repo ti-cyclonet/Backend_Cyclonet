@@ -37,7 +37,7 @@ export const updateApplication = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   const { rows, rowCount } = await pool.query(
-    'UPDATE sc_authorization."tblApplications" SET strName = $1, strDescription = $2, WHERE id = $3 RETURNING *',
+    'UPDATE sc_authorization."tblApplications" SET strname = $1, strdescription = $2  WHERE id = $3 RETURNING *',
     [data.strName, data.strDescription, id]
   );
   if (rowCount === 0) {
