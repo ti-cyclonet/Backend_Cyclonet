@@ -1,5 +1,7 @@
 -- -- Crear el esquema sc_Authorization
 CREATE SCHEMA sc_Authorization;
+-- -- Crear el esquema sc_Authorization
+CREATE SCHEMA sc_Magenta;
 -- -- Crear el esquema sc_Shotra
 CREATE SCHEMA sc_Shotra;
 -- --  Crear la tabla tblRoles en el esquema sc_Authorization
@@ -22,24 +24,47 @@ CREATE TABLE sc_Authorization."tblUsers" (
     dtmCreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_id_user PRIMARY KEY (id)
 );
+-- Crear tabla Aplicacionbes
+CREATE TABLE sc_authorization."tblApplications"
+(
+    id serial NOT NULL,
+    strName character varying(100) NOT NULL UNIQUE,
+    strDescription character varying(200),
+    CONSTRAINT pk_id_application PRIMARY KEY (id)
+);
 -- -- Crear la tabla tblUsersByRol en el esquema Authorization
 CREATE TABLE sc_authorization."tblUsersByRol"
 (
     id serial NOT NULL,
     ingIdUser integer NOT NULL,
-    ingIdRol integer,
-    CONSTRAINT pk_id_users_by_rol PRIMARY KEY (id),
-    CONSTRAINT fk_id_user FOREIGN KEY (ingIdUser)
-        REFERENCES sc_authorization."tblUsers" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT fk_id_rol FOREIGN KEY (ingIdRol)
-        REFERENCES sc_authorization."tblRoles" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    ingIdRol integer NOT NULL,
+    PRIMARY KEY (ingIdUser, ingIdRol),  -- Clave primaria compuesta
+    FOREIGN KEY (ingIdUser) REFERENCES sc_Authorization."tblUsers"(id),
+    FOREIGN KEY (ingIdRol) REFERENCES sc_Authorization."tblRoles"(id)
 );
+---- Insertar Aplicaciones
+INSERT INTO sc_authorization."tblApplications" ("strName", "strDescription")
+	VALUES 
+    (
+        'Authoriza', 
+        'Access Control For CycloNet Applications'
+    ),
+    (
+        'Inout', 
+        'Inventory Management'
+    ),
+    (
+        'Shotra', 
+        'Collaboration And Recommendation Network'
+    ),
+    (
+        'Magenta', 
+        'Management General Tasks'
+    ),
+    (
+        'AidCash', 
+        'Financial Aid Cash'
+    );
 -- -- Insertar roles
 INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2, ingIdApplication)
 VALUES 
