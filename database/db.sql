@@ -1,9 +1,5 @@
 -- -- Crear el esquema sc_Authorization
 CREATE SCHEMA sc_Authorization;
--- -- Crear el esquema sc_Authorization
-CREATE SCHEMA sc_Magenta;
--- -- Crear el esquema sc_Shotra
-CREATE SCHEMA sc_Shotra;
 -- --  Crear la tabla tblRoles en el esquema sc_Authorization
 CREATE TABLE sc_Authorization."tblRoles" (
     id serial NOT NULL,
@@ -42,6 +38,32 @@ CREATE TABLE sc_authorization."tblUsersByRol"
     FOREIGN KEY (ingIdUser) REFERENCES sc_Authorization."tblUsers"(id),
     FOREIGN KEY (ingIdRol) REFERENCES sc_Authorization."tblRoles"(id)
 );
+-- Crear la tabla opciones de menu para las aplicaciones
+CREATE TABLE sc_authorization."tblMenuOptions"
+(
+    id serial NOT NULL,
+    strName character varying(100) NOT NULL,
+    strDescription character varying(200),
+    strUrl character varying(500),
+    strIcon character varying(100),
+    strType character varying(50) NOT NULL,
+    ingIdMPtather integer,
+    ingOrder integer NOT NULL,
+    ingIdApplication integer NOT NULL,
+    CONSTRAINT pk_id_menu_option PRIMARY KEY (id),
+    CONSTRAINT fk_id_application FOREIGN KEY (ingIdApplication)
+        REFERENCES sc_authorization."tblApplications" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+-- Agregar una foreing key del campo ingIdMPather hacia la misma tabla tblMenuOptions
+ALTER TABLE sc_authorization."tblMenuOptions"
+ADD CONSTRAINT fk_id_menu_option_pather
+FOREIGN KEY (ingIdMPtather)
+REFERENCES sc_authorization."tblMenuOptions" (id)
+ON UPDATE NO ACTION
+ON DELETE NO ACTION;
 ---- Insertar Aplicaciones
 INSERT INTO sc_authorization."tblApplications" ("strName", "strDescription")
 	VALUES 
@@ -120,8 +142,12 @@ VALUES
 INSERT INTO sc_Authorization."tblUsersByRol" (ingIdUser, ingIdRol)
 VALUES ('1', '1');
 
+-- /////////////////////////////////////////////////////////////////////////////
+-- -- Crear el esquema sc_Authorization
+CREATE SCHEMA sc_Magenta;
 
---  CONSULTAS
-SELECT * FROM sc_Authorization."tblUsers";
-SELECT * FROM sc_Authorization."tblRoles";
-SELECT * FROM sc_Authorization."tblUsersByRol";
+-- /////////////////////////////////////////////////////////////////////////////
+-- -- Crear el esquema sc_Shotra
+CREATE SCHEMA sc_Shotra;
+
+-- ///////////////////////////////////////////////////////////////////////////////
