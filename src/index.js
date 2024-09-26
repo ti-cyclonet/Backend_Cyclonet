@@ -7,7 +7,7 @@ import rolesRoutes from "./Authorizations/routes/roles.routes.js";
 import applicationsRoutes from "./Authorizations/routes/applications.routes.js";
 import usersbyrolRoutes from "./Authorizations/routes/usersbyrol.routes.js";
 import teamsRoutes  from "./Magenta/routes/teams.routes.js";
-
+import requestsRoutes from "./Shotra/routes/requests.routes.js"
 
 import morgan from "morgan";
 
@@ -20,6 +20,7 @@ app.use(rolesRoutes);
 app.use(applicationsRoutes);
 app.use(usersbyrolRoutes);
 app.use(teamsRoutes);
+app.use(requestsRoutes);
 
 // Configuración de CORS para permitir todas las solicitudes de cualquier origen
 app.use(cors());
