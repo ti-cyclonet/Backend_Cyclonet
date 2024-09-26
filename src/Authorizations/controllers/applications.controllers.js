@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../../db.js";
 
 // Obtiene todas las aplicaciones
 export const getApplications = async (req, res) => {
