@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../../db.js";
 
 // Obtiene todas las relaciones de Usuario por rol
 export const getUsersByRol = async (req, res) => {
