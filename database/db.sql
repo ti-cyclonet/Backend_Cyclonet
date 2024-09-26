@@ -143,8 +143,16 @@ INSERT INTO sc_Authorization."tblUsersByRol" (ingIdUser, ingIdRol)
 VALUES ('1', '1');
 
 -- /////////////////////////////////////////////////////////////////////////////
--- -- Crear el esquema sc_Authorization
+-- -- Crear el esquema sc_Magenta
 CREATE SCHEMA sc_Magenta;
+
+-- Crear la tabla teams  dentro del esquema sc_magenta
+CREATE TABLE sc_magenta."tblTeams"
+(
+    id serial NOT NULL,
+    "strName" character varying(100) NOT NULL,
+    CONSTRAINT pk_id_teams PRIMARY KEY (id)
+);
 
 -- /////////////////////////////////////////////////////////////////////////////
 -- -- Crear el esquema sc_Shotra
