@@ -151,3 +151,9 @@ CREATE SCHEMA sc_Magenta;
 CREATE SCHEMA sc_Shotra;
 
 -- ///////////////////////////////////////////////////////////////////////////////
+-- -- crear la tabla Requests 
+CREATE TABLE sc_shotra."tblRequests"
+(
+    id serial NOT NULL,
+    "strName" character varying(100) NOT NULL
+);
