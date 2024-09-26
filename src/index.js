@@ -2,10 +2,10 @@ import colors from "colors";
 import express from "express";
 import cors from "cors";
 import { PORT } from "./config.js";
-import userRoutes from "./routes/users.routes.js";
-import rolesRoutes from "./routes/roles.routes.js";
-import applicationsRoutes from "./routes/applications.routes.js";
-import usersbyrolRoutes from "./routes/usersbyrol.routes.js";
+import userRoutes from "./Authorizations/routes/users.routes.js";
+import rolesRoutes from "./Authorizations/routes/roles.routes.js";
+import applicationsRoutes from "./Authorizations/routes/applications.routes.js";
+import usersbyrolRoutes from "./Authorizations/routes/usersbyrol.routes.js";
 
 import morgan from "morgan";
 
