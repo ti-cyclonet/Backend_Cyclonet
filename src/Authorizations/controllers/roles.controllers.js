@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../../db.js";
 
 // Obtiene todos los roles
 export const getRoles = async (req, res) => {
