@@ -149,6 +149,13 @@ CREATE SCHEMA sc_Magenta;
 -- /////////////////////////////////////////////////////////////////////////////
 -- -- Crear el esquema sc_Shotra
 CREATE SCHEMA sc_Shotra;
+-- crear la tabla Servicio.
+CREATE TABLE sc_shotra."tblServices"
+(
+    id serial NOT NULL,
+    strName character varying(100) NOT NULL,
+    CONSTRAINT pk_id_services PRIMARY KEY (id)
+);
 
 -- ///////////////////////////////////////////////////////////////////////////////
 -- -- crear la tabla Requests 
