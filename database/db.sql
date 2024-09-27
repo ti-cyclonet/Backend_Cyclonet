@@ -161,7 +161,7 @@ CREATE SCHEMA sc_Shotra;
 CREATE TABLE sc_shotra."tblServices"
 (
     id serial NOT NULL,
-    strName character varying(100) NOT NULL,
+    strName character varying(100) NOT NULL,/
     CONSTRAINT pk_id_services PRIMARY KEY (id)
 );
 
