@@ -53,10 +53,7 @@ export const createApplication = async (req, res) => {
 
     const { rows, rowCount } = await pool.query(
       'INSERT INTO sc_Authorization."tblApplications" (strName, strDescription ) VALUES ($1, $2) RETURNING *',
-      [
-        data.strName,
-        data.strDescription,
-      ]
+      [data.strName, data.strDescription]
     );
 
     if (rowCount === 0) {
@@ -66,7 +63,9 @@ export const createApplication = async (req, res) => {
     res.json(rows[0]);
   } catch (error) {
     if (error.code === "23505") {
-      return res.status(409).json({ message: "Application name already exists." });
+      return res
+        .status(409)
+        .json({ message: "Application name already exists." });
     }
     return res.status(500).json({
       message: "Internat server error.",

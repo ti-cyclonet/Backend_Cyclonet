@@ -42,7 +42,7 @@ CREATE TABLE sc_authorization."tblUsersByRol"
 CREATE TABLE sc_authorization."tblMenuOptions"
 (
     id serial NOT NULL,
-    strName character varying(100) NOT NULL,
+    strName character varying(100) NOT NULL UNIQUE,
     strDescription character varying(200),
     strUrl character varying(500),
     strIcon character varying(100),
@@ -143,11 +143,32 @@ INSERT INTO sc_Authorization."tblUsersByRol" (ingIdUser, ingIdRol)
 VALUES ('1', '1');
 
 -- /////////////////////////////////////////////////////////////////////////////
--- -- Crear el esquema sc_Authorization
+-- -- Crear el esquema sc_Magenta
 CREATE SCHEMA sc_Magenta;
+
+-- Crear la tabla teams  dentro del esquema sc_magenta
+CREATE TABLE sc_magenta."tblTeams"
+(
+    id serial NOT NULL,
+    "strName" character varying(100) NOT NULL,
+    CONSTRAINT pk_id_teams PRIMARY KEY (id)
+);
 
 -- /////////////////////////////////////////////////////////////////////////////
 -- -- Crear el esquema sc_Shotra
 CREATE SCHEMA sc_Shotra;
+-- crear la tabla Servicio.
+CREATE TABLE sc_shotra."tblServices"
+(
+    id serial NOT NULL,
+    strName character varying(100) NOT NULL,/
+    CONSTRAINT pk_id_services PRIMARY KEY (id)
+);
 
 -- ///////////////////////////////////////////////////////////////////////////////
+-- -- crear la tabla Requests 
+CREATE TABLE sc_shotra."tblRequests"
+(
+    id serial NOT NULL,
+    "strName" character varying(100) NOT NULL
+);
