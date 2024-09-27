@@ -1,14 +1,12 @@
-import { pool } from "../../db.js";
+import { pool } from "../db.js";
 
-// Obtiene todos los roles
 export const getRoles = async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT * FROM sc_Authorization."tblRoles" ORDER BY ID ASC'
+    'SELECT * FROM sc_Authorization."tblRoles"'
   );
   res.json(rows);
 };
 
-// Obtiene un rol dado su ID
 export const getRolById = async (req, res) => {
   const { id } = req.params;
   const { rows } = await pool.query(
@@ -20,7 +18,6 @@ export const getRolById = async (req, res) => {
   res.json(rows);
 };
 
-// Elimina un rol dado su ID
 export const deleteRol = async (req, res) => {
   const { id } = req.params;
   const { rowCount } = await pool.query(
@@ -32,13 +29,12 @@ export const deleteRol = async (req, res) => {
   return res.sendStatus(204);
 };
 
-// Actualiza un rol dado su ID
 export const updateRol = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   const { rows, rowCount } = await pool.query(
     'UPDATE sc_authorization."tblRoles" SET strName = $1, strDescription1 = $2, strDescription2 = $3 WHERE id = $4 RETURNING *',
-    [data.strname, data.strdescription1, data.strdescription2, id]
+    [data.strName, data.strDescription1, data.strDescription2, id]
   );
   if (rowCount === 0) {
     return res.status(404).json({ message: "Rol not found." });
@@ -46,7 +42,6 @@ export const updateRol = async (req, res) => {
   res.json(rows[0]);
 };
 
-// Crea un nuevo rol
 export const createRol = async (req, res) => {
   try {
     const data = req.body;

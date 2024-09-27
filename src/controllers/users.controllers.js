@@ -1,14 +1,12 @@
-import { pool } from "../../db.js";
+import { pool } from "../db.js";
 
-// Obtener todos los usuarios
 export const getUsers = async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT * FROM sc_Authorization."tblUsers" ORDER BY ID ASC'
+    'SELECT * FROM sc_Authorization."tblUsers"'
   );
   res.json(rows);
 };
 
-// Obtener un usuario dado su ID
 export const getUserById = async (req, res) => {
   const { id } = req.params;
   const { rows } = await pool.query(
@@ -20,33 +18,6 @@ export const getUserById = async (req, res) => {
   res.json(rows);
 };
 
-// Borra un usuario dado su ID
-export const deleteUser = async (req, res) => {
-  const { id } = req.params;
-  const { rowCount } = await pool.query(
-    `DELETE FROM sc_authorization."tblUsers"	WHERE id = ${id} RETURNING *`
-  );
-  if (rowCount === 0) {
-    return res.status(404).json({ message: "User not found." });
-  }
-  return res.sendStatus(204);
-};
-
-// Actualiza un usuario dado su ID
-export const updateUser = async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
-  const { rows, rowCount } = await pool.query(
-    'UPDATE sc_authorization."tblUsers" SET strusername = $1, strpassword = $2, strstatus = $3 WHERE id = $4 RETURNING *',
-    [data.strUserName, data.strPassword, data.strStatus, id]
-  );
-  if (rowCount === 0) {
-    return res.status(404).json({ message: "User not found." });
-  }
-  res.json(rows[0]);
-};
-
-// Crea un nuevo usuario
 export const createUser = async (req, res) => {
   try {
     const data = req.body;
@@ -76,4 +47,28 @@ export const createUser = async (req, res) => {
       detail: error.detail,
     });
   }
+};
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const { rowCount } = await pool.query(
+    `DELETE FROM sc_authorization."tblUsers"	WHERE id = ${id} RETURNING *`
+  );
+  if (rowCount === 0) {
+    return res.status(404).json({ message: "User not found." });
+  }
+  return res.sendStatus(204);
+};
+
+export const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const { rows, rowCount } = await pool.query(
+    'UPDATE sc_authorization."tblUsers" SET strusername = $1, strpassword = $2, strstatus = $3 WHERE id = $4 RETURNING *',
+    [data.strUserName, data.strPassword, data.strStatus, id]
+  );
+  if (rowCount === 0) {
+    return res.status(404).json({ message: "User not found." });
+  }
+  res.json(rows[0]);
 };
