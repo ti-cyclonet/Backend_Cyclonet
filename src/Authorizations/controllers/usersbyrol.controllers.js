@@ -1,16 +1,18 @@
-import { pool } from "../db.js";
+import { pool } from "../../db.js";
 
+// Obtiene todas las relaciones de Usuario por rol
 export const getUsersByRol = async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT * FROM sc_Authorization."tblUsersByRol"'
+    'SELECT * FROM sc_Authorization."tblUsersByRol" ORDER BY ID ASC'
   );
   res.json(rows);
 };
 
-export const getUsersByRolById = async (req, res) => {
+// Obtiene las relaciones de usuario por rol dado el ID del usuario
+export const getUsersByRolByIdUser = async (req, res) => {
   const { id } = req.params;
   const { rows } = await pool.query(
-    `SELECT * FROM sc_Authorization."tblUsersByRol" WHERE id = ${id}`
+    `SELECT * FROM sc_Authorization."tblUsersByRol" WHERE ingIdUser = ${id}`
   );
   if (rows.length === 0) {
     return res.status(404).json({ message: "Relation of User By Rol not found." });
@@ -18,6 +20,19 @@ export const getUsersByRolById = async (req, res) => {
   res.json(rows);
 };
 
+// Obtiene las relaciones de usuario por rol dado el ID del rol
+export const getUsersByRolByIdRol = async (req, res) => {
+  const { id } = req.params;
+  const { rows } = await pool.query(
+    `SELECT * FROM sc_Authorization."tblUsersByRol" WHERE ingIdRol = ${id}`
+  );
+  if (rows.length === 0) {
+    return res.status(404).json({ message: "Relation of User By Rol not found." });
+  }
+  res.json(rows);
+};
+
+// Elimina una relación de usuario por rol dado el ID de la relación
 export const deleteUsersByRol = async (req, res) => {
   const { id } = req.params;
   const { rowCount } = await pool.query(
@@ -29,8 +44,10 @@ export const deleteUsersByRol = async (req, res) => {
   return res.sendStatus(204);
 };
 
+// Actualiza una relación de usuario por rol dado el ID de la relación
 export const updateUsersByRol = async (req, res) => {
     const data = req.body;
+    console.log(data);
   
     try {
       // Verificar si ingIdUser existe en tblUsers
@@ -53,16 +70,16 @@ export const updateUsersByRol = async (req, res) => {
   
       // Verificar si la relación actual existe para actualizarla
       const relationResult = await pool.query(
-        'SELECT * FROM sc_Authorization."tblUsersByRol" WHERE ingIdUser = $1 AND ingIdRol = $2',
-        [data.ingIdUser, data.ingIdRol]
+        'SELECT * FROM sc_Authorization."tblUsersByRol" WHERE ingiduser = $1',
+        [data.ingIdUser]
       );
       if (relationResult.rows.length === 0) {
-        return res.status(404).json({ message: "Relation of User By Rol not found." });
+        return res.status(404).json({ message: "The user does not have a role assigned yet." });
       }
   
       // Actualizar la relación basada en ingIdUser e ingIdRol
       const { rows, rowCount } = await pool.query(
-        'UPDATE sc_Authorization."tblUsersByRol" SET ingIdUser = $1, ingIdRol = $2 WHERE ingIdUser = $1 AND ingIdRol = $2 RETURNING *',
+        'UPDATE sc_Authorization."tblUsersByRol" SET ingidrol = $2 WHERE ingiduser = $1 RETURNING *',
         [data.ingIdUser, data.ingIdRol]
       );
   
@@ -89,7 +106,7 @@ try {
     const userResult = await pool.query(
     'SELECT * FROM sc_Authorization."tblUsers" WHERE id = $1',
     [data.ingIdUser]
-    );
+    );    
     if (userResult.rows.length === 0) {
     return res.status(404).json({ message: "User does not exist." });
     }
@@ -127,43 +144,41 @@ try {
 
 // Obtiene los roles a los que tiene acceso un usuario dado su UserName y su Password
 export const getRolsByUser = async (req, res) => {
-    try {
-      const { strUserName, strPassword, strApplication } = req.body;
-  
-      const { rows } = await pool.query(
-        `SELECT 
-            r.id AS role_id, 
-            r.strName AS role_name, 
-            a.strName AS application_name
-        FROM 
-            sc_Authorization."tblUsers" u
-        JOIN 
-            sc_Authorization."tblUsersByRol" ur ON u.id = ur.ingIdUser
-        JOIN 
-            sc_Authorization."tblRoles" r ON ur.ingIdRol = r.id
-        JOIN 
-            sc_Authorization."tblApplications" a ON r.ingIdApplication = a.id
-        WHERE 
-            u.strUserName = $1
-            AND u.strPassword = $2
-            AND a.strName = $3`,  // Filtro adicional por el nombre de la aplicación
-        [strUserName, strPassword, strApplication]
-      );
-  
-      // Verificar si no se encontraron roles para el usuario en esa aplicación
-      if (rows.length === 0) {
-        return res.status(404).json({ message: "No roles found for this user in the specified application." });
-      }
-  
-      // Enviar los roles como respuesta
-      res.json(rows);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
-        message: "Internal server error.",
-        detail: error.message,
-      });
+  try {
+    const { strUserName, strPassword, strApplication } = req.body;
+
+    const { rows } = await pool.query(
+      `SELECT 
+          r.id AS role_id, 
+          r.strname AS role_name, 
+          a.strname AS application_name
+      FROM 
+          sc_Authorization."tblUsers" u
+      JOIN 
+          sc_Authorization."tblUsersByRol" ur ON u.id = ur.ingiduser
+      JOIN 
+          sc_Authorization."tblRoles" r ON ur.ingidrol = r.id
+      JOIN 
+          sc_Authorization."tblApplications" a ON r.ingidapplication = a.id
+      WHERE 
+          u.strusername = $1
+          AND u.strpassword = $2
+          AND a.strname = $3`,  // Filtro adicional por el nombre de la aplicación
+      [strUserName, strPassword, strApplication]
+    );
+
+    // Verificar si no se encontraron roles para el usuario en esa aplicación
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No roles found for this user in the specified application." });
     }
-  };
-  
-  
+
+    // Enviar los roles como respuesta
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      detail: error.message,
+    });
+  }
+};
