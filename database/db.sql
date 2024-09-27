@@ -42,7 +42,7 @@ CREATE TABLE sc_authorization."tblUsersByRol"
 CREATE TABLE sc_authorization."tblMenuOptions"
 (
     id serial NOT NULL,
-    strName character varying(100) NOT NULL,
+    strName character varying(100) NOT NULL UNIQUE,
     strDescription character varying(200),
     strUrl character varying(500),
     strIcon character varying(100),
