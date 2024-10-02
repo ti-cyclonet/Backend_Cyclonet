@@ -20,7 +20,7 @@ CREATE TABLE sc_Authorization."tblUsers" (
     dtmCreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_id_user PRIMARY KEY (id)
 );
--- Crear tabla Aplicacionbes
+-- Crear tabla Aplicaciones
 CREATE TABLE sc_authorization."tblApplications"
 (
     id serial NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE sc_authorization."tblMenuOptions"
     strUrl character varying(500),
     strIcon character varying(100),
     strType character varying(50) NOT NULL,
-    ingIdMPtather integer,
+    ingIdMPather integer,
     ingOrder integer NOT NULL,
     ingIdApplication integer NOT NULL,
     CONSTRAINT pk_id_menu_option PRIMARY KEY (id),
@@ -64,6 +64,26 @@ FOREIGN KEY (ingIdMPtather)
 REFERENCES sc_authorization."tblMenuOptions" (id)
 ON UPDATE NO ACTION
 ON DELETE NO ACTION;
+
+-- Crear la tabla opciones de menú por rol
+CREATE TABLE sc_authorization."tblMenuOptionsByRol"
+(
+    id serial NOT NULL,
+    ingIdRol integer NOT NULL,
+    ingIdMenuOption integer NOT NULL,
+    CONSTRAINT pk_id_menu_option_by_rol PRIMARY KEY (id),
+    CONSTRAINT fk_id_rol_mor FOREIGN KEY (ingIdRol)
+        REFERENCES sc_authorization."tblRoles" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT fk_id_menu_option_mor FOREIGN KEY (ingIdMenuOption)
+        REFERENCES sc_authorization."tblMenuOptions" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
 ---- Insertar Aplicaciones
 INSERT INTO sc_authorization."tblApplications" ("strName", "strDescription")
 	VALUES 
@@ -100,13 +120,13 @@ VALUES
         'adminShotra',
         'Administrator',
         'Acceso a todas las opciones de la aplicación',
-        2
+        3
     ),
     (
         'adminInout',
         'Administrator',
         'Acceso a todas las opciones de la aplicación',
-        3
+        2
     ),
     (
         'adminMagenta',
@@ -124,7 +144,7 @@ VALUES
         'userShotra',
         'Usuario',
         'Acceso sólo a las funciones principales',
-        2
+        3
     );
 
 -- Insertar un usuario básico
