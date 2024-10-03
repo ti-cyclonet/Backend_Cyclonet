@@ -190,5 +190,6 @@ CREATE TABLE sc_shotra."tblServices"
 CREATE TABLE sc_shotra."tblRequests"
 (
     id serial NOT NULL,
-    "strName" character varying(100) NOT NULL
+    "strName" character varying(100) NOT NULL UNIQUE,
+    "strDescription" character varying(200)
 );
