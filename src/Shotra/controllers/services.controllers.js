@@ -37,7 +37,7 @@ export const updateService = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   const { rows, rowCount } = await pool.query(
-    'UPDATE sc_Shotra."tblSevices" SET strName = $1, WHERE id = $2 RETURNING *',
+    'UPDATE sc_Shotra."tblServices" SET strName = $1, WHERE id = $2 RETURNING *',
     [data.strName, id]
   );
   if (rowCount === 0) {
