@@ -26,6 +26,7 @@ CREATE TABLE sc_authorization."tblApplications"
     id serial NOT NULL,
     strName character varying(100) NOT NULL UNIQUE,
     strDescription character varying(200),
+    strLogo character varying(100),
     CONSTRAINT pk_id_application PRIMARY KEY (id)
 );
 -- -- Crear la tabla tblUsersByRol en el esquema Authorization
