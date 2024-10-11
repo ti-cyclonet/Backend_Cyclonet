@@ -86,27 +86,32 @@ CREATE TABLE sc_authorization."tblMenuOptionsByRol"
 );
 
 ---- Insertar Aplicaciones
-INSERT INTO sc_authorization."tblApplications" ("strName", "strDescription")
+INSERT INTO sc_authorization."tblApplications" ("strname", "strdescription", "strlogo")
 	VALUES 
     (
         'Authoriza', 
-        'Access Control For CycloNet Applications'
+        'Access Control For CycloNet Applications',
+        'logo_authoriza_v2.png'
     ),
     (
         'Inout', 
-        'Inventory Management'
+        'Inventory Management',
+        'logo_authoriza_v2.png'
     ),
     (
         'Shotra', 
-        'Collaboration And Recommendation Network'
+        'Collaboration And Recommendation Network',
+        'logo_authoriza_v2.png'
     ),
     (
         'Magenta', 
-        'Management General Tasks'
+        'Management General Tasks',
+        'logo_authoriza_v2.png'
     ),
     (
         'AidCash', 
-        'Financial Aid Cash'
+        'Financial Aid Cash',
+        'logo_authoriza_v2.png'
     );
 -- -- Insertar roles
 INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2, ingIdApplication)

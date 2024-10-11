@@ -11,20 +11,20 @@ import {
 const router = Router();
 
 // Obtiene todas las aplicaciones
-router.get("/applications", getApplications);
+router.get("/api/applications", getApplications);
 
 // Obtiene una aplicación por el nombre
-router.post("/validateApplicationName", validateApplicationName);
+router.post("/api/validateApplicationName", validateApplicationName);
 
 // Obtiene una aplicación dado su nombre
 
 // Elimina una aplicación dado su ID
-router.delete("/application/:id", deleteApplication);
+router.delete("/api/application/:id", deleteApplication);
 
 // Actualiza una aplicación dado su ID
-router.put("/application/:id", updateApplication);
+router.put("/api/application/:id", updateApplication);
 
 // Crea una nueva aplicación
-router.post("/createApplication", createApplication);
+router.post("/api/createApplication", createApplication);
 
 export default router;
