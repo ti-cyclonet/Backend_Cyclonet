@@ -5,23 +5,26 @@ import {
   deleteApplication,
   updateApplication,
   createApplication,
+  validateApplicationName,
 } from "../controllers/applications.controllers.js";
 
 const router = Router();
 
 // Obtiene todas las aplicaciones
-router.get("/applications", getApplications);
+router.get("/api/applications", getApplications);
 
-// Obtiene una aplicación dado su ID
-router.get("/application/:id", getApplicationById);
+// Obtiene una aplicación por el nombre
+router.post("/api/validateApplicationName", validateApplicationName);
+
+// Obtiene una aplicación dado su nombre
 
 // Elimina una aplicación dado su ID
-router.delete("/application/:id", deleteApplication);
+router.delete("/api/application/:id", deleteApplication);
 
 // Actualiza una aplicación dado su ID
-router.put("/application/:id", updateApplication);
+router.put("/api/application/:id", updateApplication);
 
 // Crea una nueva aplicación
-router.post("/application", createApplication);
+router.post("/api/createApplication", createApplication);
 
 export default router;
