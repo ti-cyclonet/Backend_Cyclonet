@@ -20,12 +20,13 @@ CREATE TABLE sc_Authorization."tblUsers" (
     dtmCreateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_id_user PRIMARY KEY (id)
 );
--- Crear tabla Aplicacionbes
+-- Crear tabla Aplicaciones
 CREATE TABLE sc_authorization."tblApplications"
 (
     id serial NOT NULL,
     strName character varying(100) NOT NULL UNIQUE,
     strDescription character varying(200),
+    strLogo character varying(100),
     CONSTRAINT pk_id_application PRIMARY KEY (id)
 );
 -- -- Crear la tabla tblUsersByRol en el esquema Authorization
@@ -42,12 +43,12 @@ CREATE TABLE sc_authorization."tblUsersByRol"
 CREATE TABLE sc_authorization."tblMenuOptions"
 (
     id serial NOT NULL,
-    strName character varying(100) NOT NULL,
+    strName character varying(100) NOT NULL UNIQUE,
     strDescription character varying(200),
     strUrl character varying(500),
     strIcon character varying(100),
     strType character varying(50) NOT NULL,
-    ingIdMPtather integer,
+    ingIdMPather integer,
     ingOrder integer NOT NULL,
     ingIdApplication integer NOT NULL,
     CONSTRAINT pk_id_menu_option PRIMARY KEY (id),
@@ -64,28 +65,53 @@ FOREIGN KEY (ingIdMPtather)
 REFERENCES sc_authorization."tblMenuOptions" (id)
 ON UPDATE NO ACTION
 ON DELETE NO ACTION;
+
+-- Crear la tabla opciones de menú por rol
+CREATE TABLE sc_authorization."tblMenuOptionsByRol"
+(
+    id serial NOT NULL,
+    ingIdRol integer NOT NULL,
+    ingIdMenuOption integer NOT NULL,
+    CONSTRAINT pk_id_menu_option_by_rol PRIMARY KEY (id),
+    CONSTRAINT fk_id_rol_mor FOREIGN KEY (ingIdRol)
+        REFERENCES sc_authorization."tblRoles" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT fk_id_menu_option_mor FOREIGN KEY (ingIdMenuOption)
+        REFERENCES sc_authorization."tblMenuOptions" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
 ---- Insertar Aplicaciones
-INSERT INTO sc_authorization."tblApplications" ("strName", "strDescription")
+INSERT INTO sc_authorization."tblApplications" ("strname", "strdescription", "strlogo")
 	VALUES 
     (
         'Authoriza', 
-        'Access Control For CycloNet Applications'
+        'Access Control For CycloNet Applications',
+        'logo_authoriza_v2.png'
     ),
     (
         'Inout', 
-        'Inventory Management'
+        'Inventory Management',
+        'logo_authoriza_v2.png'
     ),
     (
         'Shotra', 
-        'Collaboration And Recommendation Network'
+        'Collaboration And Recommendation Network',
+        'logo_authoriza_v2.png'
     ),
     (
         'Magenta', 
-        'Management General Tasks'
+        'Management General Tasks',
+        'logo_authoriza_v2.png'
     ),
     (
         'AidCash', 
-        'Financial Aid Cash'
+        'Financial Aid Cash',
+        'logo_authoriza_v2.png'
     );
 -- -- Insertar roles
 INSERT INTO sc_Authorization."tblRoles" (strName, strDescription1, strDescription2, ingIdApplication)
@@ -100,13 +126,13 @@ VALUES
         'adminShotra',
         'Administrator',
         'Acceso a todas las opciones de la aplicación',
-        2
+        3
     ),
     (
         'adminInout',
         'Administrator',
         'Acceso a todas las opciones de la aplicación',
-        3
+        2
     ),
     (
         'adminMagenta',
@@ -124,7 +150,7 @@ VALUES
         'userShotra',
         'Usuario',
         'Acceso sólo a las funciones principales',
-        2
+        3
     );
 
 -- Insertar un usuario básico
@@ -170,5 +196,6 @@ CREATE TABLE sc_shotra."tblServices"
 CREATE TABLE sc_shotra."tblRequests"
 (
     id serial NOT NULL,
-    "strName" character varying(100) NOT NULL
+    "strName" character varying(100) NOT NULL UNIQUE,
+    "strDescription" character varying(200)
 );
