@@ -1,4 +1,5 @@
 import { pool } from "../../db.js";
+import { uploadImage, getOptimizedUrl  } from "../services/cloudinary.service.js";
 
 // Obtiene todas las aplicaciones
 export const getApplications = async (req, res) => {
@@ -86,27 +87,33 @@ export const updateApplication = async (req, res) => {
 // Crea una nueva aplicación
 export const createApplication = async (req, res) => {
   try {
-    const data = req.body;
+      const data = req.body;
+      const imageUrl = req.body.imageUrl; // Suponemos que el frontend envía la URL de la imagen
 
-    const { rows, rowCount } = await pool.query(
-      'INSERT INTO sc_Authorization."tblApplications" (strName, strDescription, strLogo ) VALUES ($1, $2, $3) RETURNING *',
-      [data.strName, data.strDescription, data.strLogo]
-    );
+      // Sube la imagen a Cloudinary
+      const uploadResult = await uploadImage(imageUrl, data.strName);
 
-    if (rowCount === 0) {
-      return res.status(404).json({ message: "Application not inserted." });
-    }
+      // Genera la URL optimizada de la imagen
+      const optimizedImageUrl = getOptimizedUrl(uploadResult.public_id);
 
-    res.json(rows[0]);
+      // Inserta la nueva aplicación en la base de datos con la URL de la imagen optimizada
+      const { rows, rowCount } = await pool.query(
+          'INSERT INTO sc_Authorization."tblApplications" (strName, strDescription, strLogo) VALUES ($1, $2, $3) RETURNING *',
+          [data.strName, data.strDescription, optimizedImageUrl]
+      );
+
+      if (rowCount === 0) {
+          return res.status(404).json({ message: "Application not inserted." });
+      }
+
+      res.json(rows[0]);
   } catch (error) {
-    if (error.code === "23505") {
-      return res
-        .status(409)
-        .json({ message: "Application name already exists." });
-    }
-    return res.status(500).json({
-      message: "Internat server error.",
-      detail: error.detail,
-    });
+      if (error.code === "23505") {
+          return res.status(409).json({ message: "Application name already exists." });
+      }
+      return res.status(500).json({
+          message: "Internal server error.",
+          detail: error.detail,
+      });
   }
 };

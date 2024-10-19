@@ -11,11 +11,30 @@ import servicesroutes from "./Shotra/routes/services.routes.js";
 import teamsRoutes from "./Magenta/routes/teams.routes.js";
 import requestsRoutes from "./Shotra/routes/requests.routes.js";
 import morgan from "morgan";
+import dotenv from 'dotenv';
+import { cloudinary } from "./Authorizations/services/cloudinary.service.js"; // Importa Cloudinary
+
+dotenv.config(); // Carga las variables de entorno
+
+// Configuración de Cloudinary
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const app = express();
 
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', "OPTIONS"],
+  allowedHeaders: ['Content-Type', "Authorization", "Accept", "Referer"],
+}));
+
+app.options("*", cors());
+
 app.use(userRoutes);
 app.use(rolesRoutes);
 app.use(applicationsRoutes);
@@ -24,29 +43,6 @@ app.use(menuoptionsRoutes);
 app.use(servicesroutes);
 app.use(teamsRoutes);
 app.use(requestsRoutes);
-
-// Configuración CORS con opciones detalladas
-// app.use(
-//   cors({
-//     origin: "http://localhost:4200", // Permitir solo desde tu frontend
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Métodos permitidos
-//     allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
-//     credentials: true, // Permitir cookies (si es necesario)
-//   })
-// );
-
-// Habilitar CORS para solicitudes desde 'http://localhost:4200'
-
-// Manejar solicitudes preflight (OPTIONS)
-app.options('*', cors()); // Permitir que todas las rutas respondan a OPTIONS
-
-app.use(cors({
-  origin: 'http://localhost:4200', // Permitir solicitudes solo desde este origen
-  methods: ['GET', 'POST', 'PUT', 'DELETE', "OPTIONS"], // Métodos permitidos
-  allowedHeaders: ['Content-Type', "Authorization", "Accept", "Referer"], // Cabeceras permitidas
-}));
-
-app.options("*", cors()); // Permite todas las solicitudes OPTIONS
 
 app.listen(PORT);
 
