@@ -14,7 +14,7 @@ export { cloudinary };
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary.v2,
   params: {
-    folder: 'your-folder-name', // Opcional: nombre de la carpeta en Cloudinary
+    folder: 'images', 
     allowedFormats: ['jpg', 'png', 'jpeg'],
     // Puedes establecer otros parámetros como el nombre del archivo
   },
