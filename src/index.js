@@ -13,16 +13,9 @@ import teamsRoutes from "./Magenta/routes/teams.routes.js";
 import requestsRoutes from "./Shotra/routes/requests.routes.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { cloudinary } from "./Authorizations/services/cloudinary.service.js"; // Importa Cloudinary
+
 
 dotenv.config(); // Carga las variables de entorno
-
-// Configuración de Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 const app = express();
 
