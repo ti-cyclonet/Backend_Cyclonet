@@ -1,5 +1,4 @@
 import { pool } from "../../db.js";
-import { uploadImage, getOptimizedUrl  } from "../services/cloudinary.service.js";
 
 // Obtiene todas las aplicaciones
 export const getApplications = async (req, res) => {
@@ -85,38 +84,35 @@ export const updateApplication = async (req, res) => {
 };
 
 // Crea una nueva aplicación
-// export const createApplication = async (req, res) => {
-//   try {
-//       const data = req.body;
-//       const file = rep-file;
-//       console.log('ARCHIVO: ', file);
-//       const imageUrl = req.body.imageUrl; // Suponemos que el frontend envía la URL de la imagen      
+export const createApplication = async (req, res) => {
+  try {
+    const appName = req.body.strName;
+    const appDescription = req.body.strDescription;
+    const file = req.file.filename;
+    const imageUrl = `http://localhost:3000/${file}`;
+    
+    console.log('APPLICATION NAME: ', appName);
+    console.log('APPLICATION DESCRIPTION: ', appDescription);
+    console.log('IMAGE URL: ', imageUrl);
 
-//       // Sube la imagen a Cloudinary
-//       const uploadResult = await uploadImage(imageUrl, data.strName);
+    // Inserta la nueva aplicación en la base de datos
+    const { rows, rowCount } = await pool.query(
+      'INSERT INTO sc_Authorization."tblApplications" (strName, strDescription, strLogo) VALUES ($1, $2, $3) RETURNING *',
+      [appName, appDescription, imageUrl]
+    );
 
-//       // Genera la URL optimizada de la imagen
-//       const optimizedImageUrl = getOptimizedUrl(uploadResult.public_id);
+    if (rowCount === 0) {
+      return res.status(404).json({ message: "Application not inserted." });
+    }
 
-//       // Inserta la nueva aplicación en la base de datos con la URL de la imagen optimizada
-//       const { rows, rowCount } = await pool.query(
-//           'INSERT INTO sc_Authorization."tblApplications" (strName, strDescription, strLogo) VALUES ($1, $2, $3) RETURNING *',
-//           [data.strName, data.strDescription, optimizedImageUrl]
-//       );
-
-//       if (rowCount === 0) {
-//           return res.status(404).json({ message: "Application not inserted." });
-//       }
-
-//       res.json(rows[0]);
-//   } catch (error) {
-//       if (error.code === "23505") {
-//           return res.status(409).json({ message: "Application name already exists." });
-//       }
-//       return res.status(500).json({
-//           message: "Internal server error.",
-//           detail: error.detail,
-//       });
-//   }
-// };
-
+    res.json(rows[0]);
+  } catch (error) {
+    if (error.code === "23505") {
+      return res.status(409).json({ message: "Application name already exists." });
+    }
+    return res.status(500).json({
+      message: "Internal server error.",
+      detail: error.detail,
+    });
+  }
+};
