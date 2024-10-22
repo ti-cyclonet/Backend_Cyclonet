@@ -1,4 +1,6 @@
 import { pool } from "../../db.js";
+import cloudinary from "../../cloudinaryConfig.js";
+import fs from "fs";
 
 // Obtiene todas las aplicaciones
 export const getApplications = async (req, res) => {
@@ -23,7 +25,7 @@ export const getApplicationById = async (req, res) => {
 // Verifica si el nombre de la aplicación está disponible
 export const validateApplicationName = async (req, res) => {
   const { name } = req.body; // Se obtiene el nombre de la aplicación del body de la solicitud
-  
+
   try {
     const { rows } = await pool.query(
       `SELECT COUNT(*) AS name_exists FROM sc_Authorization."tblApplications" WHERE strName = $1`,
@@ -36,8 +38,8 @@ export const validateApplicationName = async (req, res) => {
         available: false, // El nombre no está disponible
         message: "Application name not available. Please try another one.",
       };
-      
-      console.log('Server response:', response); // Imprime el objeto de respuesta
+
+      console.log("Server response:", response); // Imprime el objeto de respuesta
       return res.json(response);
     }
 
@@ -46,16 +48,14 @@ export const validateApplicationName = async (req, res) => {
       available: true, // El nombre está disponible
       message: "Application name is available.",
     };
-    
-    console.log('Server response:', response); // Imprime el objeto de respuesta
-    return res.json(response);
 
+    console.log("Server response:", response); // Imprime el objeto de respuesta
+    return res.json(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 // Elimina una aplicación dado su ID
 export const deleteApplication = async (req, res) => {
@@ -88,17 +88,34 @@ export const createApplication = async (req, res) => {
   try {
     const appName = req.body.strName;
     const appDescription = req.body.strDescription;
-    const file = req.file.filename;
-    const imageUrl = `http://localhost:3000/${file}`;
-    
-    console.log('APPLICATION NAME: ', appName);
-    console.log('APPLICATION DESCRIPTION: ', appDescription);
-    console.log('IMAGE URL: ', imageUrl);
 
-    // Inserta la nueva aplicación en la base de datos
+    // Verifica si se subió un archivo
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Sube la imagen a Cloudinary
+    const pathFile = req.file.path; // multer guarda el archivo temporalmente en `req.file.path`
+    const config = {
+      folder: "logos-applications", // carpeta donde guardarás las imágenes en Cloudinary
+    };
+
+    const result = await cloudinary.uploader.upload(pathFile, config); // sube a Cloudinary
+    const imageUrl = result.secure_url; // obtiene la URL segura de la imagen
+
+    // Elimina el archivo temporal una vez que se ha subido a Cloudinary
+    fs.unlink(pathFile, (err) => {
+      if (err) {
+        console.error("Error deleting temporary file:", err);
+      } else {
+        console.log("Temporary file deleted successfully");
+      }
+    });
+
+    // Inserta la nueva aplicación en la base de datos con la URL de la imagen
     const { rows, rowCount } = await pool.query(
       'INSERT INTO sc_Authorization."tblApplications" (strName, strDescription, strLogo) VALUES ($1, $2, $3) RETURNING *',
-      [appName, appDescription, imageUrl]
+      [appName, appDescription, imageUrl] // usa la URL de Cloudinary
     );
 
     if (rowCount === 0) {
@@ -108,7 +125,9 @@ export const createApplication = async (req, res) => {
     res.json(rows[0]);
   } catch (error) {
     if (error.code === "23505") {
-      return res.status(409).json({ message: "Application name already exists." });
+      return res
+        .status(409)
+        .json({ message: "Application name already exists." });
     }
     return res.status(500).json({
       message: "Internal server error.",
